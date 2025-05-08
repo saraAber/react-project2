@@ -1,0 +1,66 @@
+.edit-recipe {
+    max-width: 700px;
+    margin: 40px auto;
+    background-color: #f8f8f8;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    direction: rtl;
+    font-family: "Segoe UI", sans-serif;
+  }
+  
+  .edit-recipe h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .edit-recipe input[type="text"],
+  .edit-recipe input[type="number"],
+  .edit-recipe textarea,
+  .edit-recipe select {
+    width: 100%;
+    padding: 10px 14px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+  
+  .edit-recipe textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .edit-recipe h4 {
+    margin-top: 25px;
+    color: #444;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+  }
+  
+  .edit-recipe button {
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .edit-recipe button:hover {
+    background-color: #1565c0;
+  }
+  
+  .edit-recipe button:last-child {
+    background-color: crimson;
+  }
+  
+  .edit-recipe button:last-child:hover {
+    background-color: darkred;
+  }
+  

@@ -1,0 +1,120 @@
+.add-recipe-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 40px;
+}
+
+.add-recipe-card {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  max-width: 800px; /* הגדלתי את הרוחב המקסימלי */
+  width: 100%;
+  direction: rtl;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-recipe-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.add-recipe-card input,
+.add-recipe-card textarea,
+.add-recipe-card select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.inline-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  align-items: center; /* Align items vertically in the flex container */
+}
+
+.ingredient-section,
+.step-section {
+  margin-top: 20px;
+  flex: 1; /* Make sections take up equal space */
+  min-width: 300px; /* Ensure sections have a minimum width */
+}
+
+.ingredients-and-steps {
+  display: flex;
+  flex-direction: row; /* Arrange sections in a row */
+  gap: 20px; /* Add some gap between the sections */
+  width: 100%; /* Ensure the container takes full width */
+  justify-content: space-between; /* Space out the sections */
+  flex-wrap: wrap; /* Allow sections to wrap on smaller screens */
+}
+
+
+.ingredient-section h3,
+.step-section h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+  text-align: center; /* Center the heading */
+}
+
+.add-button {
+  margin-bottom: 15px;
+  align-self: flex-start;
+}
+
+button[type="submit"] {
+  margin-top: 30px;
+  padding: 10px 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  align-self: center;
+  width: 200px;
+}
+
+button[type="submit"]:hover {
+  background-color: #135cb0;
+}
+
+.ingredient-number,
+.instruction-number {
+  margin-left: 5px; /* Space between number and input/textarea */
+  font-weight: bold;
+  color: #555; /* Style the number */
+}
+
+.instruction-group {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; /* Align items to the start (top) */
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.instruction-group textarea {
+  flex: 1; /* Make textarea take up available space */
+}
+.ingredient-section .inline-group input{
+  width: calc(31% - 10px);
+}
+@media (max-width: 768px) {
+  .ingredients-and-steps {
+    flex-direction: column;
+  }
+  .ingredient-section .inline-group input{
+    width: 100%;
+  }
+}

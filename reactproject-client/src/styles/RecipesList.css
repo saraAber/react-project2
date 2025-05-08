@@ -1,0 +1,28 @@
+.recipes-list {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    direction: rtl;
+}
+
+.recipe-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    transition: transform 0.2s ease;
+}
+
+.recipe-card:hover {
+    transform: scale(1.01);
+}
+
+.recipe-card h5 {
+    margin-bottom: 10px;
+}
+
+h2{
+    margin-bottom: 400px;
+    font-size: 35px;
+}
