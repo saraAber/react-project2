@@ -1,37 +1,37 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { createRoot } from 'react-dom/client'
+import { createRoot } from 'react-dom/client';
+import './styles/index.css';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import "./styles/index.css";
-
-import App from './App.tsx'
-import Login from './components/Login.tsx'
-import Register from './components/Register.tsx'
-import RecipesList from './components/RecipesList.tsx';
-import RecipeDetail from './components/RecipeDetail.tsx';
-import AddRecipe from './components/AddRecipe.tsx'
-import EditRecipe from './components/EditRecipe.tsx'
+import App from './App';
+import Home from './components/Home';
+import Login from './components/Login';
+import Register from './components/Register';
+import AddRecipe from './components/AddRecipe';
+import EditRecipe from './components/EditRecipe';
+import RecipesList from './components/RecipesList';
+import RecipeDetail from './components/RecipeDetail';
+import userContext from './context/userContext';
 
 const routes = createBrowserRouter([
   {
-    path: "*",
-    element: <App />,
-    children: [
-      { path: "Login", element: <Login /> },
-      { path: "Register", element: <Register /> },
+    path: "*", element: <App />, children: [
+      // {path:"add-recipe",element:<AddRecipe/>},
       {
-        path: "RecipesList",
-        element: <RecipesList />,
-        children: [
-          { path: "ShowRecipe/:name", element: <RecipeDetail /> },
-          { path: "edit-recipe/:name", element: <EditRecipe /> }
-        ]
-      },
-      { path: "add-recipe", element: <AddRecipe /> }
-      // שימי לב: הורדנו את { path: "", element: <Home /> }
-    ]
+        path: "Login",
+        element: <Login />
+      },{path: "Register",
+        element: <Register />},
+        {path:"ShowRecipes",element:<RecipesList/>,children:[{path:"ShowRecipe/:name",element:<RecipeDetail/>}
+          ,{path:"edit-recipe/:name",element:<EditRecipe/>}
+        ]},
+      
+      {path:"add-recipe",element:<AddRecipe/>}]
+     
   }
-]);
+ 
+])
 
 createRoot(document.getElementById('root')!).render(
-  <RouterProvider router={routes} />
-);
+  <RouterProvider router={routes} />,
+  //add-recipe
+)

@@ -1,212 +1,172 @@
-import { useContext, useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Recipe, Ingredient, Instruction } from "../types/Types";
+import React, { useContext, useEffect, useState } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
 import axios from "axios";
+import { useParams, useNavigate } from "react-router-dom";
 import { userContext } from "../context/userContext";
-import "../styles/EditRecipe.css"; // ודא שקובץ כזה קיים או צור אותו
+import { Category, Ingredient, Instruction, RecipeCreate } from "../types/Types";
+import "../styles/RecipeForm.css";
 
-type EditableIngredient = Partial<Ingredient>; // בלי Id
-type EditableInstruction = Partial<Instruction>; // בלי Id
-
-const EditRecipe = () => {
-  const { id } = useParams<{ id: string }>();
-  const nav = useNavigate();
+const EditRecipe: React.FC = () => {
   const { Myuser } = useContext(userContext);
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm<RecipeCreate>();
+
+  const {
+    fields: ingredientFields,
+    append: appendIngredient,
+    remove: removeIngredient,
+  } = useFieldArray({ control, name: "Ingredients" });
+
+  const {
+    fields: instructionFields,
+    append: appendInstruction,
+    remove: removeInstruction,
+  } = useFieldArray({ control, name: "Instructions" });
 
   useEffect(() => {
-    const fetchRecipe = async () => {
-      try {
-        const res = await axios.get(`http://localhost:8080/api/recipe/${id}`);
+    // טעינת קטגוריות
+    axios
+      .get("http://localhost:8080/api/category")
+      .then((res) => setCategories(res.data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    // טעינת מתכון קיים
+    axios
+      .get(`http://localhost:8080/api/recipe/${id}`)
+      .then((res) => {
         const data = res.data;
-        setRecipe({
-          ...data,
-          Ingredients: data.Ingridents ?? [],
-          Instructions: data.Instructions ?? [],
+        if (Myuser?.Id !== data.UserId) {
+          alert("אין לך הרשאה לערוך את המתכון הזה");
+          navigate("/");
+          return;
+        }
+
+        // מילוי ערכים
+        setValue("Name", data.Name);
+        setValue("Description", data.Description);
+        setValue("Img", data.Img);
+        setValue("Difficulty", data.Difficulty);
+        setValue("Duration", data.Duration);
+        setValue("CategoryId", data.CategoryId);
+        setValue("UserId", data.UserId);
+        // setValue("Id", data.Id);
+
+        // Load arrays
+        data.Ingredients?.forEach((ing: Ingredient) => {
+          appendIngredient(ing);
         });
-      } catch (err) {
-        console.error("שגיאה בטעינת מתכון:", err);
-      }
-    };
-    fetchRecipe();
+
+        data.Instructions?.forEach((ins: Instruction) => {
+          appendInstruction(ins);
+        });
+      })
+      .catch((err) => console.error(err));
   }, [id]);
 
-  if (!Myuser) return <p>עליך להיות מחובר כדי לערוך מתכון.</p>;
-  if (!recipe) return <p>טוען מתכון לעריכה...</p>;
-
-  const handleChange = (field: keyof Recipe, value: any) => {
-    setRecipe(prev => prev && { ...prev, [field]: value });
+  const validateImageUrl = (value: string) => {
+    if (!value) return true;
+    const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(value);
+    const isGoogleDrive = /^https:\/\/drive\.google\.com\/.*?\/(view|file)/.test(value);
+    return isImage || isGoogleDrive || "קישור לתמונה לא תקין";
   };
 
-  const handleIngredientChange = (
-    index: number,
-    field: keyof EditableIngredient,
-    value: string
-  ) => {
-    const updated = [...recipe.Ingredients];
-    updated[index] = { ...updated[index], [field]: value };
-    setRecipe({ ...recipe, Ingredients: updated });
-  };
-
-  const handleInstructionChange = (index: number, value: string) => {
-    const updated = [...recipe.Instructions];
-    updated[index] = { ...updated[index], Name: value };
-    setRecipe({ ...recipe, Instructions: updated });
-  };
-
-  const addIngredient = () => {
-    if (!recipe) return;
-    const updated = {
-      ...recipe,
-      Ingredients: [
-        ...recipe.Ingredients,
-        { Id: 0, Name: "", Count: "", Type: "", RecipeId: recipe.Id }
-      ]
-    };
-    setRecipe(updated);
-  };
-  
-  
-  const removeIngredient = (index: number) => {
-    if (!recipe) return;
-    const updated = {
-      ...recipe,
-      Ingredients: recipe.Ingredients.filter((_, i) => i !== index)
-    };
-    setRecipe(updated);
-  };
-  
-  const addInstruction = () => {
-    if (!recipe) return;
-    const updated = {
-      ...recipe,
-      Instructions: [
-        ...recipe.Instructions,
-        { Id: 0, Name: "", RecipeId: recipe.Id }
-      ]
-    };
-    setRecipe(updated);
-  };
-  
-
-  const removeInstruction = (index: number) => {
-    if (!recipe) return;
-    const updated = {
-      ...recipe,
-      Instructions: recipe.Instructions.filter((_, i) => i !== index)
-    };
-    setRecipe(updated);
-  };
-  
-  const updateRecipe = async () => {
-    try {
-      await axios.put(`http://localhost:3000/api/recipe/${id}`, {
-        ...recipe,
-        Ingridents: recipe.Ingredients,
-        Instructions: recipe.Instructions,
-      });
-      alert("המתכון עודכן בהצלחה");
-      nav("/recipes");
-    } catch (err) {
-      console.error(err);
-      alert("אירעה שגיאה בעת העדכון");
-    }
-  };
-
-  const deleteRecipe = async () => {
-    if (confirm("האם את בטוחה שברצונך למחוק את המתכון?")) {
-      try {
-        await axios.delete(`http://localhost:3000/api/recipe/${id}`);
-        alert("המתכון נמחק");
-        nav("/recipes");
-      } catch (err) {
-        console.error(err);
-        alert("שגיאה במחיקה");
-      }
-    }
+  const onSubmit = (data: RecipeCreate) => {
+    axios
+      .post("http://localhost:8080/api/recipe/edit", data)
+      .then(() => navigate("/"))
+      .catch((err) => console.error(err));
   };
 
   return (
-    <div className="edit-recipe">
+    <form className="recipe-form" onSubmit={handleSubmit(onSubmit)}>
       <h2>עריכת מתכון</h2>
 
-      <input
-        type="text"
-        value={recipe.Name}
-        onChange={(e) => handleChange("Name", e.target.value)}
-        placeholder="שם המתכון"
-      />
-      <textarea
-        value={recipe.Description}
-        onChange={(e) => handleChange("Description", e.target.value)}
-        placeholder="תיאור"
-      />
-      <input
-        type="text"
-        value={recipe.Img}
-        onChange={(e) => handleChange("Img", e.target.value)}
-        placeholder="קישור לתמונה"
-      />
-      <input
-        type="number"
-        value={recipe.Duration}
-        onChange={(e) => handleChange("Duration", +e.target.value)}
-        placeholder="זמן הכנה בדקות"
-      />
+      <input type="hidden" {...register("UserId")} />
+      {/* <input type="hidden" {...register("Id")} /> */}
 
-      <select
-        value={recipe.Difficulty}
-        onChange={(e) => handleChange("Difficulty", +e.target.value)}
-      >
-        <option value={1}>קל</option>
-        <option value={2}>בינוני</option>
-        <option value={3}>קשה</option>
-      </select>
+      <div className="field">
+        <label>שם</label>
+        <input {...register("Name", { required: "שדה חובה" })} />
+        {errors.Name && <span className="error">{errors.Name.message}</span>}
+      </div>
 
-      <h4>רכיבים:</h4>
-      {recipe.Ingredients.map((ing, idx) => (
-        <div key={idx}>
-          <input
-            type="text"
-            placeholder="שם"
-            value={ing.Name || ""}
-            onChange={(e) => handleIngredientChange(idx, "Name", e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="כמות"
-            value={ing.Count || ""}
-            onChange={(e) => handleIngredientChange(idx, "Count", e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="יחידה"
-            value={ing.Type || ""}
-            onChange={(e) => handleIngredientChange(idx, "Type", e.target.value)}
-          />
-          <button onClick={() => removeIngredient(idx)}>הסר</button>
-        </div>
-      ))}
-      <button onClick={addIngredient}>➕ הוסף רכיב</button>
+      <div className="field">
+        <label>תיאור</label>
+        <textarea {...register("Description", { required: "שדה חובה" })} />
+        {errors.Description && <span className="error">{errors.Description.message}</span>}
+      </div>
 
-      <h4>שלבי הכנה:</h4>
-      {recipe.Instructions.map((inst, idx) => (
-        <div key={idx}>
-          <textarea
-            value={inst.Name || ""}
-            onChange={(e) => handleInstructionChange(idx, e.target.value)}
-          />
-          <button onClick={() => removeInstruction(idx)}>הסר</button>
-        </div>
-      ))}
-      <button onClick={addInstruction}>➕ הוסף שלב</button>
+      <div className="field">
+        <label>תמונה (URL)</label>
+        <input {...register("Img", { validate: validateImageUrl })} />
+        {errors.Img && <span className="error">{errors.Img.message}</span>}
+      </div>
 
-      <br /><br />
-      <button onClick={updateRecipe}>💾 עדכן מתכון</button>
-      <button onClick={deleteRecipe} style={{ backgroundColor: "crimson" }}>
-        🗑️ מחיקת מתכון
-      </button>
-    </div>
+      <div className="field">
+        <label>רמת קושי</label>
+        <select {...register("Difficulty", { required: true })}>
+          <option value="קל">קל</option>
+          <option value="בינוני">בינוני</option>
+          <option value="קשה">קשה</option>
+        </select>
+      </div>
+
+      <div className="field">
+        <label>משך זמן (בדקות)</label>
+        <input type="number" {...register("Duration", { min: 1 })} />
+        {errors.Duration && <span className="error">זמן לא תקין</span>}
+      </div>
+
+      <div className="field">
+        <label>קטגוריה</label>
+        <select {...register("CategoryId", { required: "בחר קטגוריה" })}>
+          <option value="">בחר</option>
+          {categories.map((cat) => (
+            <option key={cat.Id} value={cat.Id}>
+              {cat.Name}
+            </option>
+          ))}
+        </select>
+        {errors.CategoryId && <span className="error">{errors.CategoryId.message}</span>}
+      </div>
+
+      <div>
+        <h4>רכיבים</h4>
+        {ingredientFields.map((_, index) => (
+          <div key={index} className="field">
+            <input placeholder="שם" {...register(`Ingredients.${index}.Name`, { required: true })} />
+            <input placeholder="כמות" {...register(`Ingredients.${index}.Count`, { required: true })} />
+            <input placeholder="סוג" {...register(`Ingredients.${index}.Type`, { required: true })} />
+            <button type="button" onClick={() => removeIngredient(index)}>x</button>
+          </div>
+        ))}
+        <button type="button" onClick={() => appendIngredient({ Name: "", Count: "", Type: "" })}>הוסף רכיב</button>
+      </div>
+
+      <div>
+        <h4>הוראות הכנה</h4>
+        {instructionFields.map((_, index) => (
+          <div key={index} className="field">
+            <input placeholder="הוראה" {...register(`Instructions.${index}.Name`, { required: true })} />
+            <button type="button" onClick={() => removeInstruction(index)}>x</button>
+          </div>
+        ))}
+        <button type="button" onClick={() => appendInstruction({ Name: "" })}>הוסף הוראה</button>
+      </div>
+
+      <button className="submit-btn" type="submit">שמור</button>
+    </form>
   );
 };
 

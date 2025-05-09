@@ -1,28 +1,67 @@
 .recipes-list {
-    max-width: 900px;
-    margin: auto;
     padding: 20px;
     direction: rtl;
-}
-
-.recipe-card {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: right;
+  }
+  
+  .filters {
+    display: flex;
+    gap: 10px;
     margin-bottom: 20px;
-    padding: 20px;
-    transition: transform 0.2s ease;
-}
-
-.recipe-card:hover {
-    transform: scale(1.01);
-}
-
-.recipe-card h5 {
-    margin-bottom: 10px;
-}
-
-h2{
-    margin-bottom: 400px;
-    font-size: 35px;
-}
+    flex-wrap: wrap;
+  }
+  
+  .recipes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* בדיוק 3 עמודות */
+    gap: 20px;
+  }
+  
+  .recipe-card {
+    background: #fefefe;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s ease-in-out;
+    height: 320px; /* גובה אחיד */
+  }
+  
+  .recipe-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .recipe-image {
+    width: 100%;
+    height: 120px; /* גובה מוקטן */
+    object-fit: cover;
+  }
+  
+  .recipe-info {
+    padding: 10px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .recipe-title {
+    cursor: pointer;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  
+  .recipe-info p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+    color: #444;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+  }
+  
