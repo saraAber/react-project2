@@ -1,26 +1,67 @@
 .recipe-detail {
     max-width: 800px;
-    margin: auto;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    margin: 40px auto;
+    padding: 24px;
+    background-color: #fdfdfd;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     direction: rtl;
+    font-family: "Arial", sans-serif;
   }
   
-  .recipe-detail img {
+  .top-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .edit-delete-buttons {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .recipe-detail h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #3f51b5;
+    text-align: center;
+  }
+  
+  .recipe-detail-img {
     width: 100%;
-    max-height: 400px;
+    max-height: 300px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 12px;
     margin: 20px 0;
+    border: 1px solid #ddd;
   }
   
-  .recipe-detail .instructions {
-    margin-top: 20px;
+  .recipe-detail p {
+    font-size: 1.1rem;
+    margin: 8px 0;
   }
   
-  .recipe-detail button {
-    margin-top: 30px;
+  .recipe-detail strong {
+    color: #333;
+  }
+  
+  .instructions,
+  .recipe-detail ul {
+    margin-top: 16px;
+    background-color: #f0f4ff;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #ccd9ff;
+  }
+  
+  .instructions h4,
+  .recipe-detail h4 {
+    margin-bottom: 10px;
+    color: #3f51b5;
+  }
+  
+  .recipe-detail li {
+    margin-bottom: 6px;
   }
   

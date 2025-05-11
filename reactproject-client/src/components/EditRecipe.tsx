@@ -4,7 +4,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { userContext } from "../context/userContext";
 import { Category, Ingredient, Instruction, RecipeCreate } from "../types/Types";
-import "../styles/RecipeForm.css";
+import "../styles/EditRecipe.css";
 
 const EditRecipe: React.FC = () => {
   const { Myuser } = useContext(userContext);

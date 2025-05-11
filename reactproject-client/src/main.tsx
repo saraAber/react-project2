@@ -15,23 +15,41 @@ import userContext from './context/userContext';
 const routes = createBrowserRouter([
   {
     path: "*", element: <App />, children: [
-      // {path:"add-recipe",element:<AddRecipe/>},
+      
       {
         path: "Login",
         element: <Login />
-      },{path: "Register",
-        element: <Register />},
-        {path:"ShowRecipes",element:<RecipesList/>,children:[{path:"ShowRecipe/:name",element:<RecipeDetail/>}
-          ,{path:"edit-recipe/:name",element:<EditRecipe/>}
-        ]},
-      
-      {path:"add-recipe",element:<AddRecipe/>}]
-     
+      },
+      {
+        path: "Register",
+        element: <Register />
+      },
+      {
+        path: "RecipeDetail/:id",
+        element: <RecipeDetail />
+      }
+      ,
+      {
+        path: "edit-recipe/:id",
+        element: <EditRecipe />
+      } // עדכון ל-:id
+      ,
+      {
+        path: "ShowRecipes",
+        element: <RecipesList />,
+        // children: [
+        //   { path: "RecipeDetail/:id", element: <RecipeDetail /> }, // עדכון ל-:id
+        //   { path: "edit-recipe/:id", element: <EditRecipe /> } // עדכון ל-:id
+        // ]
+      },
+      {
+        path: "add-recipe",
+        element: <AddRecipe />
+      }
+    ]
   }
- 
-])
+]);
 
 createRoot(document.getElementById('root')!).render(
-  <RouterProvider router={routes} />,
-  //add-recipe
-)
+  <RouterProvider router={routes} />
+);

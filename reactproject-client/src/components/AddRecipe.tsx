@@ -2,12 +2,17 @@ import React, { useContext, useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import axios from "axios";
 import { userContext } from "../context/userContext";
-import { Category, Ingredient, Instruction, RecipeCreate } from "../types/Types";
+import { Category, RecipeCreate } from "../types/Types";
 import { useNavigate } from "react-router-dom";
-import "../styles/RecipeForm.css";
+import "../styles/AddRecipe.css";
 
 const AddRecipe: React.FC = () => {
-  const { Myuser } = useContext(userContext);
+  // const { Myuser } = useContext(userContext);
+  // const { setRecipes } = useContext(userContext);
+  //  // הוספת setRecipes לעדכון הרשימה
+  const { Myuser, setRecipes } = useContext(userContext);
+
+  console.log(setRecipes)
   const navigate = useNavigate();
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -15,7 +20,7 @@ const AddRecipe: React.FC = () => {
     register,
     handleSubmit,
     control,
-    setValue, // הוספת setValue כדי לקבוע ערכים ב-form
+    setValue,
     formState: { errors },
   } = useForm<RecipeCreate>({
     defaultValues: {
@@ -24,10 +29,10 @@ const AddRecipe: React.FC = () => {
       Description: "",
       Difficulty: "קל",
       Duration: 0,
-      CategoryId: 0, // מתאים לערך של CategoryId שהוא מספר
+      CategoryId: 0,
       Ingredients: [{ Name: "", Count: "", Type: "" }],
       Instructions: [{ Name: "" }],
-      UserId: Myuser?.Id ?? 0, // ודא שמשתמשים בזה נכון
+      UserId: Myuser?.Id ?? 0,
     },
   });
 
@@ -41,16 +46,20 @@ const AddRecipe: React.FC = () => {
   }, []);
 
   const validateImageUrl = (value: string) => {
-    if (!value) return true; // לא חובה
+    if (!value) return true;
     const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(value);
     const isGoogleDrive = /^https:\/\/drive\.google\.com\/.*?\/(view|file)/.test(value);
     return isImage || isGoogleDrive || "קישור לתמונה לא תקין";
   };
 
   const onSubmit = (data: RecipeCreate) => {
-    data.UserId = Myuser?.Id ?? 0; // ודא שה-ID לא ריק
+    data.UserId = Myuser?.Id ?? 0;
     axios.post("http://localhost:8080/api/recipe", data)
-      .then(() => navigate("/"))
+      .then((response) => {
+        // עדכון הרשימה בצורה מיידית עם המתכון החדש
+        setRecipes(prevRecipes => [...prevRecipes, response.data]);
+        navigate("/");
+      })
       .catch(err => console.error(err));
   };
 

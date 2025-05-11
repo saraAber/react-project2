@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useState, useEffect } from "react";
+import { userContext } from "../context/userContext";
 import axios from "axios";
-import { Recipe, Category, User } from "../types/Types";
-import "../styles/RecipesList.css";
+import { Category } from "../types/Types";
+import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton, Tooltip } from "@mui/material";
+import "../styles/RecipesForm.css";
 
 const RecipesList = () => {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const { recipes, Myuser, handleDelete } = useContext(userContext);
   const [categories, setCategories] = useState<Category[]>([]);
   const [filter, setFilter] = useState({
     category: "",
@@ -16,22 +17,9 @@ const RecipesList = () => {
     time: "",
     user: "",
   });
+  const navigate = useNavigate();
 
-  const nav = useNavigate();
-
-  // המשתמש המחובר (לדוגמה, מ-localStorage)
-  const currentUser: User | null = JSON.parse(localStorage.getItem("user") || "null");
-
-  useEffect(() => {
-    axios.get("http://localhost:8080/api/recipe").then((res) => {
-      const data = res.data.map((rec: any) => ({
-        ...rec,
-        Ingredients: rec.Ingredients ?? [],
-        Instructions: rec.Instructions ?? [],
-      }));
-      setRecipes(data);
-    });
-  }, []);
+  console.log("Recipes from context:", recipes);
 
   useEffect(() => {
     axios.get("http://localhost:8080/api/category").then((res) => {
@@ -39,33 +27,18 @@ const RecipesList = () => {
     });
   }, []);
 
-  const handleDelete = (id: number, ownerId: number) => {
-    if (currentUser?.Id !== ownerId) {
-      alert("אין לך הרשאה למחוק מתכון שלא אתה יצרת");
-      return;
-    }
-
-    axios.delete(`http://localhost:8080/api/recipe/${id}`).then(() => {
-      setRecipes(recipes.filter((rec) => rec.Id !== id));
-    });
-  };
-
-  const handleEdit = (id: number, ownerId: number) => {
-    if (currentUser?.Id !== ownerId) {
-      alert("אין לך הרשאה לערוך מתכון שלא אתה יצרת");
-      return;
-    }
-
-    nav(`/edit-recipe/${id}`);
-  };
-
   const filteredRecipes = recipes.filter((rec) => {
-    const matchesCategory = filter.category === "" || rec.CategoryId === parseInt(filter.category);
-    const matchesDifficulty = filter.difficulty === "" || rec.Difficulty === filter.difficulty;
-    const matchesTime = filter.time === "" || rec.Duration <= parseInt(filter.time);
-    const matchesUser = filter.user === "" || rec.User.Name.includes(filter.user);
-
-    return matchesCategory && matchesDifficulty && matchesTime && matchesUser;
+    const matchesCategory =
+      filter.category === "" || rec.CategoryId === parseInt(filter.category);
+    const matchesDifficulty =
+      filter.difficulty === "" || rec.Difficulty === parseInt(filter.difficulty);
+    const matchesTime =
+      filter.time === "" || rec.Duration <= parseInt(filter.time);
+    const matchesUser =
+      filter.user === "" || rec.User?.Name?.includes(filter.user);
+    return (
+      matchesCategory && matchesDifficulty && matchesTime && matchesUser
+    );
   });
 
   return (
@@ -84,9 +57,10 @@ const RecipesList = () => {
 
         <select onChange={(e) => setFilter({ ...filter, difficulty: e.target.value })}>
           <option value="">בחר רמת קושי</option>
-          <option value="קל">קל</option>
-          <option value="בינוני">בינוני</option>
-          <option value="קשה">קשה</option>
+          <option value="1">קל</option>
+          <option value="2">בינוני</option>
+          <option value="3">קשה</option>
+          <option value="0">לא ידוע</option>
         </select>
 
         <input
@@ -103,30 +77,43 @@ const RecipesList = () => {
       </div>
 
       <div className="recipes-grid">
-        {filteredRecipes.map((rec) => (
-          <div key={rec.Id} className="recipe-card">
-            <img src={rec.Img} alt={rec.Name} className="recipe-image" />
-            <div className="recipe-info">
-              <h5 onClick={() => nav(`/recipe/${rec.Id}`)} className="recipe-title">
-                {rec.Name}
-              </h5>
-              <p><strong>רמת קושי:</strong> {rec.Difficulty}</p>
-              <p>{rec.Description}</p>
-
-              {currentUser?.Id === rec.UserId && (
-                <div className="actions">
-                  <Tooltip title="ערוך">
-                    <IconButton onClick={() => handleEdit(rec.Id, rec.UserId)}>
-                      <EditIcon color="primary" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="מחק">
-                    <IconButton onClick={() => handleDelete(rec.Id, rec.UserId)}>
-                      <DeleteIcon color="error" />
-                    </IconButton>
-                  </Tooltip>
+        {filteredRecipes.map((recipe) => (
+          <div key={recipe.Id} className="recipe-card">
+            <div
+              className="recipe-link"
+              style={{ cursor: 'pointer' }}
+              onClick={() => navigate(`/RecipeDetail/${recipe.Id}`)}
+            >
+              {recipe.Img && (
+                <div className="recipe-image">
+                  <img src={recipe.Img} alt={recipe.Name} />
                 </div>
               )}
+              <div className="recipe-info">
+                <h3 className="recipe-title">{recipe.Name}</h3>
+                <p>{recipe.Description}</p>
+              </div>
+            </div>
+
+            <div className="actions">
+              <Tooltip title="ערוך">
+                <IconButton
+                  onClick={() => {
+                    if (Myuser?.Id === recipe.UserId) {
+                      navigate(`/edit-recipe/${recipe.Id}`);
+                    } else {
+                      alert("אין לך הרשאה לערוך את המתכון הזה");
+                    }
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="מחק">
+                <IconButton onClick={() => handleDelete(recipe.Id)}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
             </div>
           </div>
         ))}

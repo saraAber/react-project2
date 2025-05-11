@@ -38,7 +38,7 @@
 button[type="submit"], .recipe-form button {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
-  background-color: #4caf50;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
@@ -46,5 +46,5 @@ button[type="submit"], .recipe-form button {
 }
 
 button[type="submit"]:hover, .recipe-form button:hover {
-  background-color: #45a049;
+  background-color: #007bff;
 }

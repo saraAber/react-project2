@@ -10,7 +10,7 @@ import "../styles/Register.css";
 
 const schema = yup.object().shape({
   UserName: yup.string().required("יש להזין שם משתמש"),
-  Password: yup.string().min(8, "סיסמה חייבת להכיל לפחות 8 תווים").required("יש להזין סיסמה"),
+  Password: yup.string().min(2, "סיסמה חייבת להכיל לפחות 8 תווים").required("יש להזין סיסמה"),
 });
 
 const Login = () => {
@@ -21,7 +21,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors, isValid },
     setError,
-    reset,
+    // reset,
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange",
