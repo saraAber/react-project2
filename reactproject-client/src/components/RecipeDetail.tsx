@@ -12,6 +12,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import { userContext } from "../context/userContext";
 import { CategoriesContext } from "../context/CategoriesContext";
 
+// helper לפענוח רמת קושי
 const getDifficultyText = (difficulty: number) => {
   switch (difficulty) {
     case 1: return "קל";
@@ -20,6 +21,7 @@ const getDifficultyText = (difficulty: number) => {
     default: return "";
   }
 };
+
 
 const RecipeDetail = observer(() => {
   const { id } = useParams();
@@ -49,12 +51,13 @@ const RecipeDetail = observer(() => {
 
         const formatted: Recipe = {
           ...data,
-          Difficulty: getDifficultyText(data.Difficulty),
+          Difficulty: data.Difficulty, // השאר כמספר
           Ingredients: data.Ingredients ?? [],
           Instructions: data.Instructions ?? [],
           Category: data.Category ?? { Id: 0, Name: "" },
           User: data.User ?? { Id: 0, Name: "", Email: "" },
         };
+        
 
         MobxRec.setCurrRecipe(formatted);
       } catch (err) {
@@ -149,7 +152,11 @@ const RecipeDetail = observer(() => {
 
 
       <p><strong>תיאור:</strong> {recipe.Description}</p>
-      <p><strong>רמת קושי:</strong> {recipe.Difficulty}</p>
+      {/* <p><strong>רמת קושי:</strong> {recipe.Difficulty}</p> */}
+      {/* <p><strong>רמת קושי:</strong> {getDifficultyText(recipe.Difficulty)}</p> */}
+      <p><strong>רמת קושי:</strong> {getDifficultyText(Number(recipe.Difficulty))}</p>
+
+
       <p><strong>זמן הכנה:</strong> {recipe.Duration} דקות</p>
       <p><strong>קטגוריה:</strong> {categoryName}</p>
       <p><strong>נוצר ע"י:</strong> {recipe.UserId}</p>

@@ -101,7 +101,7 @@ const AddRecipe = () => {
     try {
       await axios.post(`http://localhost:8080/api/recipe`, updatedData);
       setMsg("המתכון נוסף בהצלחה 🎉");
-      setTimeout(() => nav("/RecipeDetail"), 1000);
+      setTimeout(() => nav("/RecipeList"), 1000);
     } catch (error) {
       setMsg("שגיאה בהוספת מתכון. ודא שכל השדות מולאו כראוי.");
       console.error(error);

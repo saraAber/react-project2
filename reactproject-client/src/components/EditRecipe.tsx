@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -12,6 +12,7 @@ import {
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Snackbar } from "@mui/material";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -52,6 +53,7 @@ const validationSchema = yup.object({
 const EditRecipe: React.FC = () => {
   const { categories } = useContext(CategoriesContext);
   const { Myuser } = useContext(userContext);
+  const [msg, setMsg] = useState<string | null>(null);
   const nav = useNavigate();
   const currentRecipe = MobxRec.getCurrRecipe();
 
@@ -139,6 +141,8 @@ const EditRecipe: React.FC = () => {
 
     try {
       const response = await axios.post("http://localhost:8080/api/recipe/edit", updatedData);
+      setMsg("המתכון התעדכן בהצלחה 🎉");
+      setTimeout(() => nav("/RecipesList"), 1000);
       if (response.data) {
         MobxRec.setCurrRecipe(response.data);
       } else {
@@ -157,13 +161,17 @@ const EditRecipe: React.FC = () => {
 
     try {
       await axios.post(`http://localhost:8080/api/recipe/delete/${currentRecipe?.Id}`, { Id: currentRecipe?.Id });
-      alert("המתכון נמחק בהצלחה");
+      setMsg("המתכון נמחק בהצלחה 🎉");
+      setTimeout(() => nav("/RecipesList"), 1000);
       nav("/RecipesList");
     } catch (error) {
       console.error("Error deleting recipe", error);
       alert("שגיאה במחיקת המתכון");
     }
   };
+
+ 
+
 
   return (
     <Box display="flex" justifyContent="center" mt={2}>
@@ -172,6 +180,13 @@ const EditRecipe: React.FC = () => {
           <Typography variant="h6" textAlign="center" gutterBottom>
             ערוך מתכון
           </Typography>
+          {msg && (
+            <Typography color="success.main" textAlign="center" sx={{ mt: 2 }}>
+              {msg}
+            </Typography>
+          )}
+       
+
           <form onSubmit={handleSubmit(onSubmit)}>
             <Controller name="Name" control={control} render={({ field }) => (
               <TextField {...field} label="שם" fullWidth size="small" error={!!errors.Name} helperText={errors.Name?.message} sx={{ mb: 1 }} />
