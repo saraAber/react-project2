@@ -35,17 +35,14 @@ const routes = createBrowserRouter([
       } // עדכון ל-:id
       ,
       {
-        path: "ShowRecipes",
+        path: "RecipesList",
         element: <RecipesList />,
-        // children: [
-        //   { path: "RecipeDetail/:id", element: <RecipeDetail /> }, // עדכון ל-:id
-        //   { path: "edit-recipe/:id", element: <EditRecipe /> } // עדכון ל-:id
-        // ]
       },
       {
         path: "add-recipe",
         element: <AddRecipe />
-      }
+      },
+     
     ]
   }
 ]);

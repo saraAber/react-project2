@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { User } from "../types/Types";
+import { user } from "../types/Types";
 import axios from "axios";
 import { userContext } from "../context/userContext";
 import { Link, useNavigate } from "react-router-dom";
@@ -28,9 +28,9 @@ const Login = () => {
   });
   const onSend = async (data: any) => {
     try {
-      const res = await axios.post<User>("http://localhost:8080/api/user/login", data);
+      const res = await axios.post<user>("http://localhost:8080/api/user/login", data);
       setMyUser(res.data);
-      nav("/ShowRecipes");
+      nav("/RecipesList");
     } catch (error: any) {
       if (error.response?.data) {
         setError("UserName", { message: error.response.data });

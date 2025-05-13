@@ -1,50 +1,32 @@
-/* RecipeForm.css */
-.recipe-form {
-  max-width: 600px;
+.MuiCard-root {
+  max-width: 800px;
   margin: auto;
   padding: 1rem;
-  border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #f9f9f9;
 }
 
-.recipe-form h2 {
+.MuiTypography-root {
   text-align: center;
-}
-
-.recipe-form label {
-  display: block;
-  margin-top: 1rem;
   font-weight: bold;
+  margin-bottom: 1rem;
 }
 
-.recipe-form input,
-.recipe-form textarea,
-.recipe-form select {
-  width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.3rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+.MuiTextField-root {
+  margin-bottom: 1rem;
 }
 
-.ingredient-row,
-.instruction-row {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-button[type="submit"], .recipe-form button {
+.MuiButton-root {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 8px;
+  text-transform: none;
 }
 
-button[type="submit"]:hover, .recipe-form button:hover {
-  background-color: #007bff;
+.MuiButton-root:hover {
+  background-color: #0056b3;
+}
+
+.MuiIconButton-root {
+  padding: 0.3rem;
 }

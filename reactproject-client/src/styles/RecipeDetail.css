@@ -1,14 +1,14 @@
 .recipe-detail {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 24px;
-    background-color: #fdfdfd;
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    direction: rtl;
-    font-family: "Arial", sans-serif;
-  }
-  
+  max-width: 1000px; /* היה 800px */
+  margin: 40px auto;
+  padding: 32px; /* היה 24px */
+  background-color: #fdfdfd;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); /* יותר עומק */
+  direction: rtl;
+  font-family: "Arial", sans-serif;
+}
+
   .top-actions {
     display: flex;
     justify-content: space-between;
@@ -63,5 +63,22 @@
   
   .recipe-detail li {
     margin-bottom: 6px;
+  }
+  
+  .ingredients-instructions {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    flex-wrap: wrap; 
+  }
+  
+  .ingredients-box,
+  .instructions-box {
+    flex: 1;
+    min-width: 300px;
+    background-color: #f0f4ff;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #ccd9ff;
   }
   

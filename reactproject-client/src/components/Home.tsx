@@ -16,10 +16,11 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    setMyUser(null);
-    navigate("/");
+    localStorage.removeItem("user"); // מוחק את המשתמש מהזיכרון המקומי
+    setMyUser(null); // מעדכן את ה־Context
+    navigate("/"); // מחזיר לדף הבית
   };
-
+  
   return (
     <div className="home-container">
       <AppBar position="static" color="primary">
@@ -29,7 +30,7 @@ const Home = () => {
               <Button color="inherit" onClick={() => navigate("/")}>
                 <HomeIcon sx={{ mr: 1 }} /> בית
               </Button>
-              <Button color="inherit" onClick={() => navigate("/ShowRecipes")}>
+              <Button color="inherit" onClick={() => navigate("/RecipesList")}>
                 <MenuBookIcon sx={{ mr: 1 }} /> הצגת מתכונים
               </Button>
               <Button color="inherit" onClick={() => navigate("/add-recipe")}>
@@ -51,7 +52,7 @@ const Home = () => {
               <Button color="inherit" onClick={() => navigate("/Register")}>
                 <PersonAddIcon sx={{ mr: 1 }} /> הרשמה
               </Button>
-              <Button color="inherit" onClick={() => navigate("/ShowRecipes")}>
+              <Button color="inherit" onClick={() => navigate("/RecipesList")}>
                 <MenuBookIcon sx={{ mr: 1 }} /> הצגת מתכונים
               </Button>
               <Box sx={{ flexGrow: 1 }} />

@@ -28,6 +28,9 @@ const AddRecipy = (req, res) => {
     const {
         Name, UserId, Categoryid, Img, Duration, Difficulty, Description,
         Ingridents, Instructions } = req.body;
+    //הדפסה לבדיקה מה לא נכון לי בשליחה
+    console.log(req.body);
+    console.log(Name, UserId, Categoryid, Img, Duration, Difficulty, Description, Ingridents, Instructions);
 
     if (!Name || !UserId || !Categoryid || !Img || !Duration || !Difficulty || !Description || !Ingridents || !Instructions) {
         // לא נשלח מידע
@@ -54,6 +57,10 @@ const EditRecipy = (req, res) => {
         Name, UserId, Categoryid, Img, Duration, Difficulty, Description,
         Ingridents, Instructions } = req.body;
 
+    console.log("קיבלתי בקשה לעדכון מתכון עם הנתונים:", req.body);
+
+
+
     if (!Id || !Name || !UserId || !Categoryid || !Img || !Duration || !Difficulty || !Description || !Ingridents || !Instructions) {
         // לא נשלח מידע
         return res.status(400).send('המידע שנשלח לא תקין')
@@ -77,6 +84,8 @@ const EditRecipy = (req, res) => {
 
 const Delete = (req, res) => {
     const { Id } = req.params;
+    console.log("נתונים למחיקה:", req.body);
+
     DeleteDb(Id)
         .then(_ => res.send('ok'))
         .catch(err => {
